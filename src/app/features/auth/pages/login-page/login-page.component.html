@@ -1,0 +1,38 @@
+<app-layout-shell
+  [title]="texts.pageTitle"
+  [subtitle]="texts.pageSubtitle"
+>
+  <div class="flex flex-col items-center ">
+    <form class="app-card space-y-10 rounded-[1.5rem] p-6 w-full max-w-lg" (ngSubmit)="submit()">
+      <div>
+        <label class="mb-2 block text-sm font-medium" [style.color]="'var(--fc-text)'">{{ texts.emailLabel }}</label>
+        <input
+          [(ngModel)]="email"
+          name="email"
+          type="email"
+          class="app-input"
+          [placeholder]="texts.emailPlaceholder"
+        />
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium" [style.color]="'var(--fc-text)'">{{ texts.passwordLabel }}</label>
+        <input
+          [(ngModel)]="password"
+          name="password"
+          type="password"
+          class="app-input"
+          [placeholder]="texts.passwordPlaceholder"
+        />
+      </div>
+
+      <p *ngIf="error()" class="app-status-danger rounded-2xl px-4 py-3 text-sm">
+        {{ error() }}
+      </p>
+
+      <button type="submit" class="app-button app-button-primary text-sm">
+        {{ texts.submitButton }}
+      </button>
+    </form>
+  </div>
+</app-layout-shell>

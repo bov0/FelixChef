@@ -1,0 +1,240 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --fc-bg: #1e1e2e;
+  --fc-bg-soft: #181825;
+  --fc-surface: rgba(49, 50, 68, 0.86);
+  --fc-card: rgba(69, 71, 90, 0.9);
+  --fc-border: rgba(137, 180, 250, 0.18);
+  --fc-text: #cdd6f4;
+  --fc-muted: #bac2de;
+  --fc-accent: #89b4fa;
+  --fc-accent-strong: #74c7ec;
+  --fc-success: #a6e3a1;
+  --fc-danger: #f38ba8;
+  --fc-warning: #f9e2af;
+  --fc-shadow: 0 22px 60px rgba(17, 17, 27, 0.42);
+  --fc-hero-a: rgba(203, 166, 247, 0.2);
+  --fc-hero-b: rgba(137, 180, 250, 0.18);
+  --fc-hero-c: rgba(250, 179, 135, 0.14);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --fc-bg: #eff1f5;
+  --fc-bg-soft: #e6e9ef;
+  --fc-surface: rgba(255, 255, 255, 0.82);
+  --fc-card: rgba(252, 252, 253, 0.92);
+  --fc-border: rgba(30, 102, 245, 0.12);
+  --fc-text: #4c4f69;
+  --fc-muted: #5c5f77;
+  --fc-accent: #1e66f5;
+  --fc-accent-strong: #179299;
+  --fc-success: #40a02b;
+  --fc-danger: #d20f39;
+  --fc-warning: #df8e1d;
+  --fc-shadow: 0 22px 60px rgba(140, 143, 161, 0.25);
+  --fc-hero-a: rgba(136, 57, 239, 0.15);
+  --fc-hero-b: rgba(30, 102, 245, 0.12);
+  --fc-hero-c: rgba(254, 100, 11, 0.1);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, var(--fc-hero-a), transparent 32%),
+    radial-gradient(circle at top right, var(--fc-hero-b), transparent 28%),
+    radial-gradient(circle at bottom center, var(--fc-hero-c), transparent 32%),
+    linear-gradient(180deg, var(--fc-bg-soft) 0%, var(--fc-bg) 100%);
+  color: var(--fc-text);
+  transition:
+    background 200ms ease,
+    color 200ms ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.glass-panel {
+  background: var(--fc-surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--fc-border);
+  box-shadow: var(--fc-shadow);
+}
+
+.app-card {
+  background: var(--fc-card);
+  border: 1px solid var(--fc-border);
+  box-shadow: var(--fc-shadow);
+}
+
+.app-input {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid var(--fc-border);
+  background: rgba(17, 17, 27, 0.16);
+  color: var(--fc-text);
+  padding: 0.9rem 1rem;
+  outline: none;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
+}
+
+.app-input[type='text'],
+.app-input[type='email'],
+.app-input[type='password'],
+.app-input[type='search'],
+.app-input[type='url'],
+.app-input[type='tel'],
+.app-input[type='number'],
+select.app-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--fc-accent) 50%),
+    linear-gradient(135deg, var(--fc-accent) 50%, transparent 50%);
+  background-position: calc(100% - 1rem) center, calc(100% - 0.6rem) center;
+  background-size: 8px 8px;
+  background-repeat: no-repeat;
+  padding-right: 2.6rem;
+}
+
+select.app-input {
+  background-color: rgba(17, 17, 27, 0.16);
+}
+
+/* Intentar redondear solo el dropdown (limitado por navegador) */
+select.app-input:focus {
+  border-radius: 1rem 1rem 0 0;
+}
+
+/* Los options nativos no se pueden estilizar completamente */
+select.app-input option {
+  background: var(--fc-card);
+  color: var(--fc-text);
+  border-radius: 0 0 10px 10px;
+}
+
+select.app-input option {
+  background: var(--fc-card);
+  color: var(--fc-text);
+}
+
+:root[data-theme='light'] .app-input {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+:root[data-theme='light'] select.app-input {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+:root[data-theme='light'] select.app-input option {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--fc-text);
+}
+
+.app-input::-ms-expand {
+  display: none;
+}
+
+.app-input:focus {
+  border-color: var(--fc-accent);
+  transform: translateY(-1px);
+}
+
+.app-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  border: 0;
+  padding: 0.8rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease,
+    background 150ms ease;
+}
+
+.app-button:hover {
+  transform: translateY(-1px);
+}
+
+.app-button-primary {
+  background: var(--fc-accent);
+  color: #11111b;
+}
+
+.app-button-secondary {
+  background: transparent;
+  color: var(--fc-text);
+  border: 1px solid var(--fc-border);
+}
+
+.app-chip {
+  border-radius: 999px;
+  border: 1px solid var(--fc-border);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.55rem 0.9rem;
+}
+
+.app-status-danger {
+  background: color-mix(in srgb, var(--fc-danger) 14%, transparent);
+  color: var(--fc-danger);
+}
+
+.app-status-success {
+  background: color-mix(in srgb, var(--fc-success) 14%, transparent);
+  color: var(--fc-success);
+}
+
+.app-status-warning {
+  background: color-mix(in srgb, var(--fc-warning) 18%, transparent);
+  color: color-mix(in srgb, var(--fc-warning) 78%, var(--fc-text));
+}
+
+.shake {
+  animation: shake 360ms ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-6px);
+  }
+  40%, 80% {
+    transform: translateX(6px);
+  }
+}
+
+.recipe-prose p {
+  margin: 0;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+

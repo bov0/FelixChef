@@ -1,0 +1,22 @@
+<article class="grid gap-4 rounded-[1.25rem] border border-[var(--fc-border)] p-4 md:grid-cols-[160px_1fr_auto]">
+  <img [src]="recipe.thumbnailUrl" [alt]="recipe.title" class="h-28 w-full rounded-2xl object-cover" />
+
+  <div class="min-w-0">
+    <p class="text-xs uppercase tracking-[0.25em]" [style.color]="'var(--fc-muted)'">
+      {{ recipe.createdAt | date: 'dd/MM/yyyy' }}
+    </p>
+    <h3 class="truncate font-display text-2xl" [style.color]="'var(--fc-text)'">
+      {{ recipe.title }}
+    </h3>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <button type="button" class="app-button app-button-secondary text-sm" (click)="edit.emit(recipe)">
+      {{ texts.edit }}
+    </button>
+    <button type="button" class="app-button text-sm" [style.background]="'var(--fc-danger)'" [style.color]="'#11111b'"
+      (click)="remove.emit(recipe)">
+      {{ texts.delete }}
+    </button>
+  </div>
+</article>

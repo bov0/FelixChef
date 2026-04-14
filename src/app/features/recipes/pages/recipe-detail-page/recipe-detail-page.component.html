@@ -1,0 +1,73 @@
+﻿<app-layout-shell
+  [title]="recipe()?.title || texts.defaultTitle"
+  [subtitle]="texts.subtitle"
+>
+  <ng-container *ngIf="recipe() as currentRecipe; else notFound">
+    <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+      <section class="app-card overflow-hidden rounded-[1.75rem]">
+        <img
+          [src]="currentRecipe.thumbnailUrl"
+          [alt]="currentRecipe.title"
+          class="h-64 w-full object-cover sm:h-80"
+        />
+
+        <div class="space-y-6 p-6 md:p-8">
+          <div class="flex flex-wrap gap-3 text-sm">
+            <span class="app-chip" [style.color]="'var(--fc-muted)'">
+              {{ texts.published }} {{ currentRecipe.createdAt | date: 'dd/MM/yyyy' }}
+            </span>
+            <span class="app-chip" [style.color]="'var(--fc-muted)'">
+              {{ currentRecipe.ingredients.length }} {{ texts.ingredientsSuffix }}
+            </span>
+          </div>
+
+          <div class="recipe-prose text-base leading-8" [style.color]="'var(--fc-muted)'">
+            <p>{{ currentRecipe.description }}</p>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <a
+              [href]="currentRecipe.youtubeUrl"
+              target="_blank"
+              rel="noreferrer"
+              class="app-button app-button-primary"
+            >
+              {{ texts.videoButton }}
+            </a>
+            <a routerLink="/" class="app-button app-button-secondary">
+              {{ texts.backButton }}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="app-card rounded-[1.75rem] p-6">
+        <h2 class="font-display text-3xl" [style.color]="'var(--fc-text)'">{{ texts.ingredientsTitle }}</h2>
+
+        <ul class="mt-5 space-y-3">
+          <li
+            *ngFor="let ingredient of currentRecipe.ingredients"
+            class="flex items-center justify-between gap-3 rounded-2xl border border-[var(--fc-border)] px-4 py-3"
+          >
+            <span class="flex items-center gap-3" [style.color]="'var(--fc-text)'">
+              <span class="text-2xl">{{ ingredient.icon }}</span>
+              <span>{{ ingredient.name }}</span>
+            </span>
+            <span class="text-sm" [style.color]="'var(--fc-muted)'">
+              {{ ingredient.quantity || texts.quantityDefault }}
+            </span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </ng-container>
+
+  <ng-template #notFound>
+    <section class="app-card rounded-[1.75rem] p-6">
+      <p [style.color]="'var(--fc-muted)'">{{ texts.notFound }}</p>
+      <a routerLink="/" class="mt-4 inline-flex app-button app-button-secondary">
+        {{ texts.backToRecipes }}
+      </a>
+    </section>
+  </ng-template>
+</app-layout-shell>

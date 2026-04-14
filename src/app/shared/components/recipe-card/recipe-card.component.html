@@ -1,0 +1,36 @@
+<article class="app-card overflow-hidden rounded-[1.5rem] transition hover:-translate-y-1 hover:cursor-pointer"
+  (click)="handleCardClick()">
+  <img [src]="recipe.thumbnailUrl" [alt]="recipe.title" class="h-52 w-full object-cover sm:h-60" />
+
+  <div class="space-y-5 p-6">
+    <div class="space-y-2">
+      <p class="text-xs uppercase tracking-[0.25em]" [style.color]="'var(--fc-muted)'">
+        {{ texts.published }} {{ recipe.createdAt | date: 'dd/MM/yyyy' }}
+      </p>
+      <h2 class="font-display text-3xl" [style.color]="'var(--fc-text)'">{{ recipe.title }}</h2>
+    </div>
+
+    <div>
+      <h3 class="mb-2 text-sm font-semibold uppercase tracking-[0.2em]" [style.color]="'var(--fc-accent)'">
+        {{ texts.ingredients }}
+      </h3>
+      <div class="flex flex-wrap gap-2">
+        <span *ngFor="let ingredient of previewIngredients()" class="app-chip text-sm"
+          [style.color]="'var(--fc-muted)'">
+          {{ ingredient.icon }} {{ ingredient.name }}
+        </span>
+      </div>
+    </div>
+
+    <div class="recipe-prose line-clamp-3 text-sm leading-7" [style.color]="'var(--fc-muted)'">
+      <p>{{ recipe.description }}</p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-end gap-3">
+      <a [routerLink]="['/recipes', recipe.id]" class="app-button app-button-secondary text-sm"
+        (click)="$event.stopPropagation()">
+        {{ texts.moreDetails }}
+      </a>
+    </div>
+  </div>
+</article>

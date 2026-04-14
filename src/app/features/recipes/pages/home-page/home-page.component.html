@@ -1,0 +1,63 @@
+﻿<app-layout-shell title="El Rincón de Félix"
+  subtitle="Tras años trabajando en diferentes cocinas, Félix abre su recetario para compartir platos llenos de técnica, sabor y también opciones accesibles para disfrutar de la cocina en casa cada día.">
+
+  <section class="mb-6">
+    <div class="grid gap-4 rounded-[30px] border border-[var(--fc-border)] bg-[var(--fc-card)] p-4 shadow-sm">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h2 class="font-display text-3xl" [style.color]="'var(--fc-text)'">{{ texts.home.filterTitle }}</h2>
+        <button *ngIf="activeFilters().length > 0" type="button" class="app-button app-button-secondary text-sm"
+          (click)="clearFilters()">
+          {{ texts.home.clearFilters }}
+        </button>
+      </div>
+
+      <div class="grid gap-4 lg:grid-cols-[1fr_auto] items-end">
+        <div class="grid gap-3">
+          <label class="text-sm font-medium" [style.color]="'var(--fc-text)'">{{ texts.home.selectIngredient }}</label>
+          <select class="app-input w-full" [value]="selectedIngredient()" (change)="selectIngredient($event)">
+            <option value="">{{ texts.home.ingredientPlaceholder }}</option>
+            <option *ngFor="let ingredient of allIngredients()" [value]="ingredient.id">
+              {{ ingredient.icon }} {{ ingredient.name }}
+            </option>
+          </select>
+        </div>
+
+        <app-sort-select
+          [label]="texts.home.sortLabel"
+          [mobileLabel]="texts.home.sortMobileLabel"
+          [value]="sortSelection"
+          [options]="sortOptions"
+          (valueChange)="updateSortSelection($event)"
+        ></app-sort-select>
+
+          <div class="flex flex-wrap gap-2">
+            <button *ngFor="let ingredient of selectedIngredients()" type="button"
+              class="app-chip text-sm transition hover:opacity-90" [style.border-color]="'var(--fc-accent)'"
+              [style.color]="'var(--fc-text)'" (click)="toggleFilter(ingredient.id)">
+              {{ ingredient.icon }} {{ ingredient.name }} ✕
+            </button>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid gap-6 md:grid-cols-2">
+    <app-recipe-card *ngFor="let recipe of paginatedRecipes()" [recipe]="recipe" (openVideo)="openRecipeVideo($event)" />
+  </div>
+
+  <div *ngIf="pageCount() > 1" class="mt-6 flex flex-wrap items-center justify-between gap-3">
+    <p class="text-sm" [style.color]="'var(--fc-text)'">{{ texts.home.pageLabel }} {{ currentPage() }} {{ texts.home.pageDivider }} {{ pageCount() }}</p>
+    <div class="flex flex-wrap gap-2">
+      <button type="button" class="app-button app-button-secondary text-sm" [disabled]="currentPage() === 1" (click)="previousPage()">
+        {{ texts.home.previous }}
+      </button>
+      <button type="button" class="app-button app-button-secondary text-sm" [disabled]="currentPage() === pageCount()" (click)="nextPage()">
+        {{ texts.home.next }}
+      </button>
+    </div>
+  </div>
+
+  <p *ngIf="filteredRecipes().length === 0" class="mt-6 text-sm" [style.color]="'var(--fc-muted)'">
+    {{ texts.home.noRecipesFound }}
+  </p>
+</app-layout-shell>

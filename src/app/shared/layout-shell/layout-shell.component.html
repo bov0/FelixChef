@@ -1,0 +1,70 @@
+<div class="app-shell">
+  <header class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+    <a routerLink="/" class="font-display text-3xl" [style.color]="'var(--fc-text)'">{{ texts.app.name }}</a>
+
+    <nav
+      class="flex flex-wrap items-center justify-end gap-3 text-sm font-medium"
+      [style.color]="'var(--fc-muted)'"
+    >
+      <a
+        routerLink="/"
+        routerLinkActive="app-chip"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="rounded-full px-4 py-2 transition hover:opacity-80"
+      >
+        {{ texts.app.recipes }}
+      </a>
+      <a
+        *ngIf="loggedIn()"
+        routerLink="/admin"
+        routerLinkActive="app-chip"
+        class="rounded-full px-4 py-2 transition hover:opacity-80"
+      >
+        {{ texts.app.adminPanel }}
+      </a>
+      <a
+        *ngIf="!loggedIn()"
+        routerLink="/login"
+        routerLinkActive="app-chip"
+        class="rounded-full px-4 py-2 transition hover:opacity-80"
+      >
+        {{ texts.app.login }}
+      </a>
+      <button
+        type="button"
+        (click)="toggleTheme()"
+        class="app-button app-button-secondary px-4 py-2 text-sm"
+      >
+        {{ themeLabel() }}
+      </button>
+      <button
+        *ngIf="loggedIn()"
+        type="button"
+        (click)="logout()"
+        class="app-button app-button-primary px-4 py-2 text-sm"
+      >
+        {{ texts.app.logout }}
+      </button>
+    </nav>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-6 pb-12">
+    <section class="glass-panel rounded-[2rem] p-6 md:p-10">
+      <div class="mb-8 flex flex-col gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+        <div class="space-y-3">
+          <p class="text-sm uppercase tracking-[0.3em]" [style.color]="'var(--fc-accent)'">
+            {{ texts.header.videosLabel }}
+          </p>
+          <h1 class="font-display text-4xl md:text-6xl" [style.color]="'var(--fc-text)'">
+            {{ title() }}
+          </h1>
+        </div>
+        <p class="max-w-xl text-sm leading-6" [style.color]="'var(--fc-muted)'">
+          {{ subtitle() }}
+        </p>
+      </div>
+
+      <ng-content />
+    </section>
+  </main>
+</div>

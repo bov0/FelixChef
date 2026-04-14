@@ -1,0 +1,16 @@
+<div class="grid gap-2">
+  <label class="mb-2 block text-sm font-medium truncate" [style.color]="'var(--fc-text)'">
+    <span class="hidden sm:inline">{{ label }}</span>
+    <span class="inline sm:hidden">{{ mobileLabel || label }}</span>
+  </label>
+
+  <select
+    class="app-input min-w-[220px] w-full truncate"
+    [value]="value"
+    (change)="onChange($event)"
+  >
+    <option *ngFor="let option of options" [value]="option.value">
+      {{ option.label }}
+    </option>
+  </select>
+</div>

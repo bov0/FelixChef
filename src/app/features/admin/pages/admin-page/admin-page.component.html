@@ -1,0 +1,311 @@
+﻿<app-layout-shell
+  [title]="texts.pageTitle"
+  [subtitle]="texts.pageSubtitle"
+>
+  <div class="mb-6 flex flex-wrap gap-3">
+    <button
+      type="button"
+      class="app-button text-sm"
+      [class.app-button-primary]="activeTab() === 'editor'"
+      [class.app-button-secondary]="activeTab() !== 'editor'"
+      (click)="activeTab.set('editor')"
+    >
+      {{ editingRecipeId() ? texts.editRecipe : texts.editorTab }}
+    </button>
+    <button
+      type="button"
+      class="app-button text-sm"
+      [class.app-button-primary]="activeTab() === 'recipes'"
+      [class.app-button-secondary]="activeTab() !== 'recipes'"
+      (click)="activeTab.set('recipes')"
+    >
+      {{ texts.recipesTab }}
+    </button>
+    <button
+      type="button"
+      class="app-button text-sm"
+      [class.app-button-primary]="activeTab() === 'ingredients'"
+      [class.app-button-secondary]="activeTab() !== 'ingredients'"
+      (click)="activeTab.set('ingredients')"
+    >
+      {{ texts.ingredientsTab }}
+    </button>
+  </div>
+
+  <div *ngIf="activeTab() === 'editor'" class="grid gap-8 xl:grid-cols-[0.95fr_1.05fr]">
+    <form class="app-card space-y-5 rounded-[1.5rem] p-6" (ngSubmit)="submit()">
+      <div class="flex items-center justify-between gap-3">
+        <h2 class="font-display text-3xl" [style.color]="'var(--fc-text)'">
+          {{ editingRecipeId() ? texts.editRecipe : texts.createRecipe }}
+        </h2>
+        <button
+          *ngIf="editingRecipeId()"
+          type="button"
+          class="app-button app-button-secondary text-sm"
+          (click)="resetForm()"
+        >
+          {{ texts.cancelEdit }}
+        </button>
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium" [style.color]="'var(--fc-text)'">{{ texts.titleLabel }}</label>
+        <input
+          [(ngModel)]="title"
+          name="title"
+          class="app-input"
+          [placeholder]="texts.titlePlaceholder"
+        />
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium" [style.color]="'var(--fc-text)'">{{ texts.youtubeLabel }}</label>
+        <input
+          [ngModel]="youtubeUrl"
+          (ngModelChange)="onYoutubeUrlChange($event)"
+          name="youtubeUrl"
+          class="app-input"
+          [style.border-color]="showYoutubeWarning() ? 'var(--fc-danger)' : 'var(--fc-border)'"
+          [placeholder]="texts.youtubePlaceholder"
+        />
+        <p
+          *ngIf="showYoutubeWarning()"
+          class="mt-2 text-sm"
+          [style.color]="'var(--fc-danger)'"
+        >
+          {{ texts.youtubeInvalidWarning }}
+        </p>
+      </div>
+
+      <div>
+        <label class="mb-3 block text-sm font-medium" [style.color]="'var(--fc-text)'">
+          {{ texts.ingredientsLabel }}
+        </label>
+        <div class="grid gap-3 sm:grid-cols-2" [class.shake]="shouldShakeIngredients()">
+          <button
+            *ngFor="let ingredient of ingredients()"
+            type="button"
+            class="app-chip flex items-center justify-between text-left transition hover:opacity-85"
+            [style.border-color]="isSelected(ingredient.id) ? 'var(--fc-accent)' : 'var(--fc-border)'"
+            (click)="toggleIngredient(ingredient)"
+          >
+            <span [style.color]="'var(--fc-text)'">{{ ingredient.icon }} {{ ingredient.name }}</span>
+            <span class="text-xs" [style.color]="'var(--fc-muted)'">
+              {{ isSelected(ingredient.id) ? 'Seleccionado' : 'Añadir' }}
+            </span>
+          </button>
+        </div>
+        <p *ngIf="ingredientWarning()" class="mt-3 rounded-2xl px-4 py-3 text-sm app-status-warning">
+          {{ ingredientWarning() }}
+        </p>
+      </div>
+
+      <div *ngIf="selectedIngredients().length > 0">
+        <label class="mb-3 block text-sm font-medium" [style.color]="'var(--fc-text)'">
+          {{ texts.quantitiesLabel }}
+        </label>
+
+        <div class="space-y-3">
+          <div
+            *ngFor="let ingredient of selectedIngredients()"
+            class="grid gap-3 rounded-2xl border border-[var(--fc-border)] p-4 sm:grid-cols-[1fr_1.2fr_auto]"
+          >
+            <div class="flex items-center gap-3" [style.color]="'var(--fc-text)'">
+              <span class="text-2xl">{{ ingredient.icon }}</span>
+              <span>{{ ingredient.name }}</span>
+            </div>
+
+            <input
+              [ngModel]="ingredient.quantity"
+              (ngModelChange)="updateQuantity(ingredient.ingredientId, $event)"
+              [name]="'quantity-' + ingredient.ingredientId"
+              class="app-input"
+              [placeholder]="texts.quantityPlaceholder"
+            />
+
+            <button
+              type="button"
+              class="app-button app-button-secondary text-sm"
+              (click)="removeIngredient(ingredient.ingredientId)"
+            >
+              {{ texts.removeButton }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium" [style.color]="'var(--fc-text)'">{{ texts.descriptionLabel }}</label>
+        <textarea
+          [(ngModel)]="description"
+          name="description"
+          rows="7"
+          class="app-input"
+          [placeholder]="texts.previewDescriptionPlaceholder"
+        ></textarea>
+      </div>
+
+      <p *ngIf="message()" class="app-status-success rounded-2xl px-4 py-3 text-sm">
+        {{ message() }}
+      </p>
+
+      <p *ngIf="error()" class="app-status-danger rounded-2xl px-4 py-3 text-sm">
+        {{ error() }}
+      </p>
+
+      <button type="submit" class="app-button app-button-primary text-sm">
+        {{ editingRecipeId() ? texts.editRecipe : texts.createRecipe }}
+      </button>
+    </form>
+
+    <section class="app-card space-y-4 rounded-[1.5rem] p-6">
+      <h2 class="font-display text-3xl" [style.color]="'var(--fc-text)'">{{ texts.previewTitle }}</h2>
+
+      <div
+        class="overflow-hidden rounded-[1.5rem] border border-[var(--fc-border)]"
+        [style.background]="'var(--fc-surface)'"
+      >
+        <div class="aspect-video" [style.background]="'var(--fc-bg-soft)'">
+          <img
+            *ngIf="previewThumbnailUrl(); else emptyThumbnail"
+            [src]="previewThumbnailUrl()"
+            alt="Miniatura del video"
+            class="h-full w-full object-cover"
+          />
+          <ng-template #emptyThumbnail>
+            <div class="flex h-full items-center justify-center px-6 text-center text-sm" [style.color]="'var(--fc-muted)'">
+              {{ showYoutubeWarning() ? texts.previewThumbnailWarning : texts.previewThumbnailEmpty }}
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="space-y-4 p-6">
+          <h3 class="font-display text-3xl" [style.color]="'var(--fc-text)'">
+            {{ title || texts.previewRecipePlaceholder }}
+          </h3>
+          <ul class="space-y-2 text-sm" [style.color]="'var(--fc-muted)'">
+            <li *ngFor="let ingredient of selectedIngredients()">
+              {{ ingredient.icon }} {{ ingredient.name }}
+              <span *ngIf="ingredient.quantity">- {{ ingredient.quantity }}</span>
+            </li>
+          </ul>
+          <p class="text-sm leading-7" [style.color]="'var(--fc-muted)'">
+            {{ description || texts.previewDescriptionPlaceholder }}
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section *ngIf="activeTab() === 'recipes'" class="app-card rounded-[1.5rem] p-6">
+    <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+      <h2 class="font-display text-3xl" [style.color]="'var(--fc-text)'">{{ texts.manageRecipesTitle }}</h2>
+      <button type="button" class="app-button app-button-secondary text-sm" (click)="loadRecipes()">
+        {{ texts.reloadButton }}
+      </button>
+    </div>
+
+    <div class="grid gap-4">
+      <app-admin-recipe-row
+        *ngFor="let recipe of adminRecipes()"
+        [recipe]="recipe"
+        (edit)="startEditing($event)"
+        (remove)="askDeleteRecipe($event)"
+      />
+    </div>
+  </section>
+
+  <section *ngIf="activeTab() === 'ingredients'" class="grid gap-8 xl:grid-cols-[0.85fr_1.15fr]">
+    <form class="app-card space-y-5 rounded-[1.5rem] p-6" (ngSubmit)="requestAddIngredient()">
+      <h2 class="font-display text-3xl" [style.color]="'var(--fc-text)'">{{ texts.newIngredientTitle }}</h2>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium" [style.color]="'var(--fc-text)'">{{ texts.emojiLabel }}</label>
+        <input
+          [(ngModel)]="newIngredientIcon"
+          name="newIngredientIcon"
+          class="app-input"
+          [placeholder]="texts.emojiPlaceholder"
+        />
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium" [style.color]="'var(--fc-text)'">{{ texts.nameLabel }}</label>
+        <input
+          [(ngModel)]="newIngredientName"
+          name="newIngredientName"
+          class="app-input"
+          [placeholder]="texts.ingredientNamePlaceholder"
+        />
+      </div>
+
+      <button type="submit" class="app-button app-button-primary text-sm">
+        {{ texts.addIngredientButton }}
+      </button>
+    </form>
+
+    <section class="app-card rounded-[1.5rem] p-6">
+      <h2 class="mb-5 font-display text-3xl" [style.color]="'var(--fc-text)'">{{ texts.currentCatalogTitle }}</h2>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <article
+          *ngFor="let ingredient of ingredients()"
+          class="flex items-center justify-between gap-3 rounded-2xl border border-[var(--fc-border)] p-4"
+        >
+          <div class="min-w-0">
+            <p class="text-xl" [style.color]="'var(--fc-text)'">{{ ingredient.icon }}</p>
+            <p class="truncate text-sm font-medium" [style.color]="'var(--fc-text)'">
+              {{ ingredient.name }}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="app-button app-button-secondary text-sm"
+            (click)="askDeleteIngredient(ingredient)"
+          >
+            {{ texts.deleteIngredientButton }}
+          </button>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <app-confirm-dialog
+    [open]="duplicateEmojiDialogOpen()"
+    [title]="texts.duplicateEmojiTitle"
+    [message]="texts.duplicateEmojiMessage"
+    [items]="duplicateEmojiMatches()"
+    [confirmLabel]="texts.confirmContinue"
+    (confirm)="continueAfterEmojiWarning()"
+    (cancel)="cancelDuplicateEmoji()"
+  />
+
+  <app-confirm-dialog
+    [open]="duplicateNameDialogOpen()"
+    [title]="texts.duplicateNameTitle"
+    [message]="texts.duplicateNameMessage"
+    [items]="duplicateNameMatches()"
+    [confirmLabel]="texts.confirmContinue"
+    (confirm)="continueAfterNameWarning()"
+    (cancel)="cancelDuplicateName()"
+  />
+
+  <app-confirm-dialog
+    [open]="deleteIngredientDialogOpen()"
+    [title]="texts.deleteIngredientTitle"
+    [message]="messages.deleteIngredientConfirmation + (ingredientPendingDelete()?.icon || '') + ' ' + (ingredientPendingDelete()?.name || '') + '.'"
+    [confirmLabel]="texts.confirmDelete"
+    (confirm)="confirmDeleteIngredient()"
+    (cancel)="cancelDeleteIngredient()"
+  />
+
+  <app-confirm-dialog
+    [open]="deleteRecipeDialogOpen()"
+    [title]="texts.deleteRecipeTitle"
+    [message]="messages.deleteRecipeConfirmation + (recipePendingDelete()?.title || '') + '.'"
+    [confirmLabel]="texts.confirmDelete"
+    (confirm)="confirmDeleteRecipe()"
+    (cancel)="cancelDeleteRecipe()"
+  />
+</app-layout-shell>
