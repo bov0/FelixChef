@@ -115,6 +115,8 @@ To deploy on Vercel:
    - `SUPABASE_ANON_KEY`
 3. Ensure Vercel performs a standard Angular build.
 
+> The build process will automatically generate `public/env.js` from the Vercel environment variables. No `.env` file is needed in the repository for production deployment.
+
 ---
 
 ## Key repository structure
@@ -131,6 +133,6 @@ To deploy on Vercel:
 
 ## Additional notes
 
-- `public/env.js` should not be edited manually long-term: it is generated automatically.
+- `public/env.js` should not be edited manually long-term: it is generated automatically from `.env` (local) or environment variables (production).
 - If you change `.env`, restart `npm start` or rebuild the app.
-- In production, the app reads `window.env` at runtime from `public/env.js`.
+- In production (Vercel), the app reads `window.env` at runtime from `public/env.js`, which is generated during the build process from Vercel environment variables.

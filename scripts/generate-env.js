@@ -39,8 +39,8 @@ if (envValues === null) {
   }
 }
 
-const supabaseUrl = envValues?.SUPABASE_URL || 'https://YOUR_PROJECT.supabase.co';
-const supabaseAnonKey = envValues?.SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
+const supabaseUrl = envValues?.SUPABASE_URL || process.env.SUPABASE_URL || 'https://YOUR_PROJECT.supabase.co';
+const supabaseAnonKey = envValues?.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
 
 const fileContents = `window.env = {
   SUPABASE_URL: '${supabaseUrl.replace(/'/g, "\\'")}',
