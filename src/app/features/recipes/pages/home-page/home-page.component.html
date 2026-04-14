@@ -25,7 +25,7 @@
         <app-sort-select
           [label]="texts.home.sortLabel"
           [mobileLabel]="texts.home.sortMobileLabel"
-          [value]="sortSelection"
+          [value]="sortSelection()"
           [options]="sortOptions"
           (valueChange)="updateSortSelection($event)"
         ></app-sort-select>

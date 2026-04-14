@@ -21,10 +21,10 @@ export class HomePageComponent {
   readonly selectedIngredient = signal<string>('');
   readonly texts = TEXTS;
   readonly sortOptions: SortOption[] = TEXTS.home.sortOptions;
-  sortSelection: 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc' = 'date-desc';
+  readonly sortSelection = signal<'date-desc' | 'date-asc' | 'title-asc' | 'title-desc'>('date-desc');
 
   updateSortSelection(value: string): void {
-    this.sortSelection = value as 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc';
+    this.sortSelection.set(value as 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc');
   }
 
   readonly selectedIngredients = computed(() =>
@@ -47,7 +47,7 @@ export class HomePageComponent {
         );
 
     return [...filtered].sort((left: any, right: any) => {
-      switch (this.sortSelection) {
+      switch (this.sortSelection()) {
         case 'date-asc':
           return new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime();
         case 'title-asc':
