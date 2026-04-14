@@ -41,7 +41,7 @@
     </div>
   </section>
 
-  <div class="grid gap-6 md:grid-cols-2">
+  <div class="grid gap-6 md:grid-cols-2 items-stretch">
     <app-recipe-card *ngFor="let recipe of paginatedRecipes()" [recipe]="recipe" (openVideo)="openRecipeVideo($event)" />
   </div>
 
